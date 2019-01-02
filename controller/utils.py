@@ -98,6 +98,7 @@ class ControllerUtilities(object):
                 self.last_used_path[src][dst] = path
                 return path
 
+
     def getMinimumHopsPath(self, src, dst, paths):
         # retorna o primeiro caminho com o número mínimo de hops
         paths_cost = []
@@ -141,6 +142,6 @@ class ControllerUtilities(object):
         else:
             print('Erro: heuristica nao escolhida. Retornou caminho vazio')
 
-        print('Caminho escolhido = {0}'.format(final_path))
+        # print('Caminho escolhido = {0}'.format(final_path))
 
         return final_path

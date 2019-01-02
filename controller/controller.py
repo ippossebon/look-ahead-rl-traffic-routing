@@ -105,7 +105,7 @@ class HybridController(app_manager.RyuApp):
 
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
-        print("Adiciona flow: {0} com actions = {1}".format(match, actions))
+        # print("Adiciona flow: {0} com actions = {1}".format(match, actions))
 
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -257,7 +257,7 @@ class HybridController(app_manager.RyuApp):
         computation_start = time.time()
         path = self.controller_utilities.choosePathAccordingToHeuristic(src, dst)
 
-        print('[installPaths] chosen path = {0}'.format(path))
+        # print('[installPaths] chosen path = {0}'.format(path))
 
         # --- Gambiarra ---
         list_path = []
@@ -265,13 +265,13 @@ class HybridController(app_manager.RyuApp):
         # -------
 
         path_with_ports = self.controller_utilities.addPortsToPath(list_path, first_port, last_port)
-        print('path_with_ports = {0}'.format(path_with_ports))
+        # print('path_with_ports = {0}'.format(path_with_ports))
         # path_with_ports = {1: (1, 3), 3: (1, 3), 4: (1, 3), 5: (2, 3), 6: (1, 2), 7: (1, 4), 10: (2, 1)}
 
         # Lista de todos os switches que fazem parte do caminho ótimo
         switches_in_path = set().union(*list_path)
 
-        print('[getBestPath] switches_in_path = {0}'.format(switches_in_path))
+        # print('[getBestPath] switches_in_path = {0}'.format(switches_in_path))
 
         for node in switches_in_path:
             # Para cada switch que faz parte do caminho:
