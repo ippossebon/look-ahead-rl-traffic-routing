@@ -1,9 +1,16 @@
 from ryu.base import app_manager
-from ryu.controller import mac_to_port, ofp_event
-from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER, set_ev_cls
+from ryu.controller import mac_to_port
+from ryu.controller import ofp_event
+from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER
+from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.mac import haddr_to_bin
-from ryu.lib.packet import packet, arp, ethernet, ipv4, ipv6, ether_types
+from ryu.lib.packet import packet
+from ryu.lib.packet import arp
+from ryu.lib.packet import ethernet
+from ryu.lib.packet import ipv4
+from ryu.lib.packet import ipv6
+from ryu.lib.packet import ether_types
 from ryu.lib import mac, ip
 from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
@@ -105,7 +112,7 @@ class HybridController(app_manager.RyuApp):
 
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
-        # print("Adiciona flow: {0} com actions = {1}".format(match, actions))
+        print("Adiciona flow: {0} com actions = {1}".format(match, actions))
 
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -257,7 +264,7 @@ class HybridController(app_manager.RyuApp):
         computation_start = time.time()
         path = self.controller_utilities.choosePathAccordingToHeuristic(src, dst)
 
-        # print('[installPaths] chosen path = {0}'.format(path))
+        print('[installPaths] chosen path = {0}'.format(path))
 
         # --- Gambiarra ---
         list_path = []
@@ -265,13 +272,13 @@ class HybridController(app_manager.RyuApp):
         # -------
 
         path_with_ports = self.controller_utilities.addPortsToPath(list_path, first_port, last_port)
-        # print('path_with_ports = {0}'.format(path_with_ports))
+        print('path_with_ports = {0}'.format(path_with_ports))
         # path_with_ports = {1: (1, 3), 3: (1, 3), 4: (1, 3), 5: (2, 3), 6: (1, 2), 7: (1, 4), 10: (2, 1)}
 
         # Lista de todos os switches que fazem parte do caminho ótimo
         switches_in_path = set().union(*list_path)
 
-        # print('[getBestPath] switches_in_path = {0}'.format(switches_in_path))
+        print('[getBestPath] switches_in_path = {0}'.format(switches_in_path))
 
         for node in switches_in_path:
             # Para cada switch que faz parte do caminho:
@@ -309,9 +316,8 @@ class HybridController(app_manager.RyuApp):
         if buffer_id:
             mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,
                                     priority=priority, match=match,
-                                    instructions=inst,
-                                    hard_timeout=10)
+                                    instructions=inst)
         else:
             mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
-                                    match=match, instructions=inst, hard_timeout=10)
+                                    match=match, instructions=inst)
         datapath.send_msg(mod)

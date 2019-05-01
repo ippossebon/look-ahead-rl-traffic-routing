@@ -6,8 +6,8 @@ from collections import defaultdict
 # Cisco Reference bandwidth = 1 Gbps
 REFERENCE_BW = 10000000
 
-FIRST_PATH = False
-MIN_HOPS = True
+FIRST_PORT = True
+MIN_HOPS = False
 RANDOM = False
 
 class ControllerUtilities(object):
@@ -16,8 +16,6 @@ class ControllerUtilities(object):
         self.adjacency = adjacency
         self.datapath_list = datapath_list         # dicionário cuja chave é o ID do switch e o valor é datapath correspondente
         self.bandwidths = bandwidths
-        self.last_used_path = {}
-        # testar se isso ta funcionando
 
     def getPaths(self, src, dst):
         '''
@@ -26,7 +24,6 @@ class ControllerUtilities(object):
         if src == dst:
             # Significa que o host e o destino estão conectados ao mesmo switch.
             return [[src]]
-
 
         paths = []
         stack = [(src, [src])]
@@ -79,27 +76,10 @@ class ControllerUtilities(object):
 
         return paths_p[0]
 
+    def getFirstPath(self, paths):
+        return paths[0]
 
-    def isNewPath(self, src, dst, path):
-        if src not in self.last_used_path.keys():
-            self.last_used_path[src] = {}
-
-        if dst not in self.last_used_path[src].keys():
-            self.last_used_path[src][dst] = []
-
-        if self.last_used_path[src][dst] == path:
-            return False
-
-        return True
-
-    def getFirstUnusedPath(self, src, dst, paths):
-        for path in paths:
-            if self.isNewPath(src, dst, path):
-                self.last_used_path[src][dst] = path
-                return path
-
-
-    def getMinimumHopsPath(self, src, dst, paths):
+    def getMinimumHopsPath(self, paths):
         # retorna o primeiro caminho com o número mínimo de hops
         paths_cost = []
 
@@ -108,24 +88,11 @@ class ControllerUtilities(object):
 
         index_min = paths_cost.index(min(paths_cost))
 
-        candidate_path = paths[index_min]
+        return paths[index_min]
 
-        while not self.isNewPath(src, dst, candidate_path):
-            paths.remove(candidate_path)
-            candidate_path = paths[index_min]
-
-        return candidate_path
-
-    def getRandomPath(self, src, dst, paths):
+    def getRandomPath(self, paths):
         index = randrange(len(paths))
-        candidate_path = paths[index_min]
-
-        while not self.isNewPath(src, dst, candidate_path):
-            paths.remove(candidate_path)
-            index = randrange(len(paths))
-            candidate_path = paths[index_min]
-
-        return candidate_path
+        return paths[index]
 
     def choosePathAccordingToHeuristic(self, src, dst):
         paths = self.getPaths(src, dst)
@@ -133,15 +100,14 @@ class ControllerUtilities(object):
         # De acordo com a heuristica escolhida:
         final_path = []
 
-        if FIRST_PATH:
-            final_path = self.getFirstUnusedPath(src, dst, paths)
+        if FIRST_PORT:
+            final_path = self.getFirstPath(paths)
         elif MIN_HOPS:
-            final_path = self.getMinimumHopsPath(src, dst, paths)
+            final_path = self.getMinimumHopsPath(paths)
         elif RANDOM:
-            final_path = self.getRandomPath(src, dst, paths)
+            final_path = self.getRandomPath(paths)
         else:
             print('Erro: heuristica nao escolhida. Retornou caminho vazio')
 
-        # print('Caminho escolhido = {0}'.format(final_path))
-
+        print('Caminho escolhido = {0}'.format(final_path))
         return final_path
