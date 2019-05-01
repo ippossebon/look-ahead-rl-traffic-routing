@@ -6,7 +6,7 @@ from collections import defaultdict
 # Cisco Reference bandwidth = 1 Gbps
 REFERENCE_BW = 10000000
 
-FIRST_PORT = True
+FIRST_PATH = True
 MIN_HOPS = False
 RANDOM = False
 
@@ -100,7 +100,7 @@ class ControllerUtilities(object):
         # De acordo com a heuristica escolhida:
         final_path = []
 
-        if FIRST_PORT:
+        if FIRST_PATH:
             final_path = self.getFirstPath(paths)
         elif MIN_HOPS:
             final_path = self.getMinimumHopsPath(paths)
