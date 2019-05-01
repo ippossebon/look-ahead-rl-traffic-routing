@@ -1,6 +1,7 @@
 import csv
 
 from predictor import FlowSizePredictor
+
 from sklearn.model_selection import KFold
 
 class FlowSizePredictorApplication(object):
@@ -22,8 +23,6 @@ class FlowSizePredictorApplication(object):
                 else:
                     self.data.append(row)
 
-
-
     def runPredictor(self):
         total_bytes_index = self.features.index("obyt")
         training_set = []
@@ -44,7 +43,6 @@ class FlowSizePredictorApplication(object):
         test_set = training_set
         predictions = predictor.adaBoostMLP(test_set)
         print(predictions)
-
 
 
 
