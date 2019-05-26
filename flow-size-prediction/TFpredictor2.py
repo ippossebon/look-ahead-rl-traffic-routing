@@ -48,21 +48,21 @@ test_dataset = dataset.drop(train_dataset.index)
 
 # inspect dataset - Have a quick look at the joint distribution of a few pairs of columns from the training set.
 sns.pairplot(
-    train_dataset[["Flow.Duration"]],
+    train_dataset[["Total.Length.of.Fwd.Packets"]],
     diag_kind="kde"
 )
 
 # check overall statistics
 train_stats = train_dataset.describe()
-train_stats.pop("Flow.Duration")
+train_stats.pop("Total.Length.of.Fwd.Packets")
 train_stats = train_stats.transpose()
 print(train_stats)
 
 
 
 # split features from labels - Separate the target value (label) from features
-train_labels = train_dataset.pop('Flow.Duration')
-test_labels = test_dataset.pop('Flow.Duration')
+train_labels = train_dataset.pop('Total.Length.of.Fwd.Packets')
+test_labels = test_dataset.pop('Total.Length.of.Fwd.Packets')
 
 
 # Normalize data
@@ -143,7 +143,7 @@ def plotHistory(history):
 
     plt.figure()
     plt.xlabel('Epoch')
-    plt.ylabel('Mean Abs Error [Flow.Duration]')
+    plt.ylabel('Mean Abs Error [Total.Length.of.Fwd.Packets]')
     plt.plot(
         hist['epoch'],
         hist['mean_absolute_error'],
@@ -159,7 +159,7 @@ def plotHistory(history):
 
     plt.figure()
     plt.xlabel('Epoch')
-    plt.ylabel('Mean Square Error [$Flow.Duration^2$]')
+    plt.ylabel('Mean Square Error [$Total.Length.of.Fwd.Packets^2$]')
     plt.plot(
         hist['epoch'],
         hist['mean_squared_error'],
@@ -196,15 +196,15 @@ history = model.fit(
 plotHistory(history)
 
 loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=0)
-print("Testing set Mean Abs Error: {:5.2f} Flow.Duration".format(mae))
+print("Testing set Mean Abs Error: {:5.2f} Total.Length.of.Fwd.Packets".format(mae))
 
 
 ## Make predictions ##
 test_predictions = model.predict(normed_test_data).flatten()
 
 plt.scatter(test_labels, test_predictions)
-plt.xlabel('True Values [Flow.Duration]')
-plt.ylabel('Predictions [Flow.Duration]')
+plt.xlabel('True Values [Total.Length.of.Fwd.Packets]')
+plt.ylabel('Predictions [Total.Length.of.Fwd.Packets]')
 plt.axis('equal')
 plt.axis('square')
 plt.xlim([0,plt.xlim()[1]])
@@ -215,5 +215,5 @@ _ = plt.plot([-100, 100], [-100, 100])
 # Error distribution
 error = test_predictions - test_labels
 plt.hist(error, bins = 25)
-plt.xlabel("Prediction Error [Flow.Duration]")
+plt.xlabel("Prediction Error [Total.Length.of.Fwd.Packets]")
 _ = plt.ylabel("Count")
