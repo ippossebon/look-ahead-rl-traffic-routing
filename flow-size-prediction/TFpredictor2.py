@@ -46,6 +46,9 @@ dataset = dataset.dropna()
 train_dataset = dataset.sample(frac=0.8,random_state=0)
 test_dataset = dataset.drop(train_dataset.index)
 
+print('valores de Total.Length.of.Fwd.Packets')
+print(train_dataset[["Total.Length.of.Fwd.Packets"]])
+
 # inspect dataset - Have a quick look at the joint distribution of a few pairs of columns from the training set.
 sns.pairplot(
     train_dataset[["Total.Length.of.Fwd.Packets"]],
@@ -57,7 +60,6 @@ train_stats = train_dataset.describe()
 train_stats.pop("Total.Length.of.Fwd.Packets")
 train_stats = train_stats.transpose()
 print(train_stats)
-
 
 
 # split features from labels - Separate the target value (label) from features
@@ -85,7 +87,14 @@ normed_test_data = test_dataset
 def buildModel():
     # Add layers to the deep learning model: Adds a densely-connected layer with 64 units to the model:
     model = keras.Sequential([
-        layers.Dense(64, activation=tf.nn.relu, input_shape=[len(train_dataset.keys())]),
+        layers.Dense(128, activation=tf.nn.relu, input_shape=[len(train_dataset.keys())]),
+        layers.Dense(128, activation=tf.nn.relu),
+        layers.Dense(128, activation=tf.nn.relu),
+        layers.Dense(128, activation=tf.nn.relu),
+        layers.Dense(128, activation=tf.nn.relu),
+        layers.Dense(64, activation=tf.nn.relu),
+        layers.Dense(64, activation=tf.nn.relu),
+        layers.Dense(64, activation=tf.nn.relu),
         layers.Dense(64, activation=tf.nn.relu),
         layers.Dense(1)
     ])
@@ -96,7 +105,7 @@ def buildModel():
     model.compile(
         loss='mean_squared_error',
         optimizer=optimizer,
-        metrics=['mean_absolute_error', 'mean_squared_error']
+        metrics=['accuracy', 'mean_absolute_error', 'mean_squared_error']
     )
     return model
 
