@@ -1,8 +1,9 @@
 import csv
 
-file_path = './dataset/Dataset-Unicauca-Version2-87Atts.csv'
 
-FILE_SIZE = 1000
+file_path = '../../../datasets/Dataset-Unicauca-Version2-87Atts.csv'
+
+FILE_SIZE = 10000
 with open(file_path) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
@@ -14,7 +15,7 @@ with open(file_path) as csv_file:
         else:
             # Escreve novo arquivo
             filename = 'unicauca{0}.csv'.format(FILE_SIZE)
-            
+
             with open(filename, mode='w') as subfile:
                 writer = csv.writer(subfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 for row in rows:
