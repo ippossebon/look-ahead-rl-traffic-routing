@@ -9,6 +9,9 @@ class Graph(object):
     def addNode(self, node):
         self.nodes.append(node)
 
+    def getMinimumCostPath(self, source, target):
+        pass
+
     def printGraph(self):
         for link in self.links:
             print('{node1}-------({weight})-------{node2}'.format(
