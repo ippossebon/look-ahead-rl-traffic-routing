@@ -21,55 +21,67 @@ class BinPackingRouting(object):
             item_index = flows_copy.index(max_volume_required_item)
             del flows_copy[item_index]
 
+        # ordered_flows contém a lista de pares de switches ordenados por volume
+        # de tráfego necessário
+
         # Calcula caminho de custo mínimo, onde o custo de cada caminho é o recíproco
         # da sua capacidade disponível (1/capacidade). Após associar um par de
         # switches a um caminho, atualiza o custo de cada link.
-        
+        for flow in ordered_flows:
+            min_cost_path = self.network.getMinimumCostPath(flow)
 
 
 
 if __name__ == '__main__':
-    networkGraph = Graph()
+    nodes = []
+    links = []
 
-    node1 = Node(name='S1')
-    networkGraph.addNode(node1)
-    node2 = Node(name='S2')
-    networkGraph.addNode(node2)
-    node3 = Node(name='S3')
-    networkGraph.addNode(node3)
-    node4 = Node(name='S4')
-    networkGraph.addNode(node4)
-    node5 = Node(name='S5')
-    networkGraph.addNode(node5)
-    node6 = Node(name='S6')
-    networkGraph.addNode(node6)
+    node0 = Node(name='S0', index=0)
+    nodes.append(node0)
+    node1 = Node(name='S1', index=1)
+    nodes.append(node1)
+    node2 = Node(name='S2', index=2)
+    nodes.append(node2)
+    node3 = Node(name='S3', index=3)
+    nodes.append(node3)
+    node4 = Node(name='S4', index=4)
+    nodes.append(node4)
+    node5 = Node(name='S5', index=5)
+    nodes.append(node5)
 
+    link01 = Link(node0, node1, 500)
+    links.append(link01)
+    link04 = Link(node0, node4, 500)
+    links.append(link04)
     link12 = Link(node1, node2, 500)
-    networkGraph.addLink(link12)
-    link15 = Link(node1, node5, 500)
-    networkGraph.addLink(link15)
+    links.append(link12)
+    link14 = Link(node1, node4, 500)
+    links.append(link14)
     link23 = Link(node2, node3, 500)
-    networkGraph.addLink(link23)
-    link25 = Link(node2, node5, 500)
-    networkGraph.addLink(link25)
+    links.append(link23)
     link34 = Link(node3, node4, 500)
-    networkGraph.addLink(link34)
+    links.append(link34)
+    link35 = Link(node3, node5, 500)
+    links.append(link35)
     link45 = Link(node4, node5, 500)
-    networkGraph.addLink(link45)
-    link46 = Link(node4, node6, 500)
-    networkGraph.addLink(link46)
-    link56 = Link(node5, node6, 500)
-    networkGraph.addLink(link56)
+    links.append(link45)
 
-    routingModel = BinPackingRouting(networkGraph)
+    network = Graph(links=links, nodes=nodes)
+    network.printCostMatrix()
 
-    flow16 = Flow(node1, node6, 200)
-    flow24 = Flow(node2, node4, 50)
-    flow36 = Flow(node3, node6, 100)
+    routingModel = BinPackingRouting(network)
+
+    flow05 = Flow(node0, node5, 200)
+    flow13 = Flow(node1, node3, 50)
+    flow25 = Flow(node2, node5, 100)
+
+    min_cost = network.getMinimumCostPath(flow25)
+    print(min_cost)
+    exit(1)
 
     flows = []
-    flows.append(flow16)
-    flows.append(flow24)
-    flows.append(flow36)
+    flows.append(flow05)
+    flows.append(flow13)
+    flows.append(flow25)
 
     paths = routingModel.findPaths(flows)
