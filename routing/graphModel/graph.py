@@ -14,8 +14,8 @@ class Graph(object):
 
         for link in self.links:
             # Inicializa custo bidirecional
-            self.cost[link.node1.index][link.node2.index] = link.weight
-            self.cost[link.node2.index][link.node1.index] = link.weight
+            self.cost[link.node1.index][link.node2.index] = 1 / link.weight
+            self.cost[link.node2.index][link.node1.index] = 1 / link.weight
 
     def createDistancesDict(self):
         # Cria dicionário de distâncias de cada nodo até todos os outros
@@ -41,7 +41,7 @@ class Graph(object):
         for i in range(len(path) - 1):
             item_index_source = path[i]
             item_index_target = path[i+1]
-            self.cost[item_index_source][item_index_target] = self.cost[item_index_source][item_index_target] - consumed_bandwidth
+            self.cost[item_index_source][item_index_target] = self.cost[item_index_source][item_index_target] - (1 / consumed_bandwidth)
 
         new_distances = self.createDistancesDict()
 
