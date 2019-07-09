@@ -25,13 +25,16 @@ class Graph(object):
         print('-> Get mininum cost path [Dijkstra] from {0} to {1}'.format(
             flow.source.name, flow.target.name))
 
-        path = self.dijsktra2(flow.source, flow.target)
-        print(path)
+        return self.dijsktra(flow.source, flow.target)
+
+    def dijsktra(self, source, target):
+        # shortest paths is a dict of nodes
+        # whose value is a tuple of (previous node, weight)
+        shortest_paths = {source.index: (None, 0)}
+        current_node = source.index
+        visited = set()
 
 
-    def dijkstra(self, source):
-        nodes_list = [item.name for item in self.nodes]
-        #
         # Cria dicionário de distâncias de cada nodo até todos os outros
         # distances = {
         #     'B': {'A': 5, 'D': 1, 'G': 2},
@@ -44,47 +47,11 @@ class Graph(object):
         distances = {}
         for node1 in self.nodes:
             # Percorre a linha
-            distances[node1.name] = {}
-            for node2 in self.nodes:
-                distances[node1.name][node2.name] = self.cost[node1.index][node2.index]
-
-        unvisited = {node: None for node in nodes_list} #using None as +inf
-        visited = {}
-        current = source.name
-        currentDistance = 0
-        unvisited[current] = currentDistance
-
-        while True:
-            for neighbour, distance in distances[current].items():
-                if neighbour not in unvisited: continue
-                newDistance = currentDistance + distance
-                if unvisited[neighbour] is None or unvisited[neighbour] > newDistance:
-                    unvisited[neighbour] = newDistance
-            visited[current] = currentDistance
-
-            del unvisited[current]
-            if not unvisited: break
-
-            candidates = [node for node in unvisited.items() if node[1]]
-            current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]
-
-        return visited
-
-    def dijsktra2(self, source, target):
-        # shortest paths is a dict of nodes
-        # whose value is a tuple of (previous node, weight)
-        shortest_paths = {source.index: (None, 0)}
-        current_node = source.index
-        visited = set()
-
-        distances = {}
-        for node1 in self.nodes:
-            # Percorre a linha
             distances[node1.index] = {}
             for node2 in self.nodes:
                 distances[node1.index][node2.index] = self.cost[node1.index][node2.index]
 
-        while current_node != target:
+        while current_node != target.index:
             visited.add(current_node)
             destinations = distances[current_node]
             weight_to_current_node = shortest_paths[current_node][1]
@@ -104,7 +71,7 @@ class Graph(object):
                 return "Route Not Possible"
             # next node is the destination with the lowest weight
             current_node = min(next_destinations, key=lambda k: next_destinations[k][1])
-            print('current_node = ', current_node)
+
         # Work back through destinations in shortest path
         path = []
         while current_node is not None:

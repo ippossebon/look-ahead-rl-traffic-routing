@@ -75,8 +75,9 @@ if __name__ == '__main__':
     flow13 = Flow(node1, node3, 50)
     flow25 = Flow(node2, node5, 100)
 
-    min_cost = network.getMinimumCostPath(flow25)
-    print(min_cost)
+    # custo = 1 / capacidade_atual
+    min_cost_path = network.getMinimumCostPath(flow25)
+    print(min_cost_path)
     exit(1)
 
     flows = []
