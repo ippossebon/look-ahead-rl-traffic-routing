@@ -65,8 +65,7 @@ class Graph(object):
         return min_cost_path
 
     def dijsktra(self, source, target):
-        # shortest paths is a dict of nodes
-        # whose value is a tuple of (previous node, weight)
+        # shortest paths is a dict of nodes whose value is a tuple of (previous node, weight)
         shortest_paths = {source.index: (None, 0)}
         current_node = source.index
         visited = set()
