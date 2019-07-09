@@ -17,24 +17,7 @@ class Graph(object):
             self.cost[link.node1.index][link.node2.index] = link.weight
             self.cost[link.node2.index][link.node1.index] = link.weight
 
-
-    def getMinimumCostPath(self, flow):
-        # Calcula caminho de custo mínimo, onde o custo de cada caminho é o recíproco
-        # da sua capacidade disponível (1/capacidade). Após associar um par de
-        # switches a um caminho, atualiza o custo de cada link.
-        print('-> Get mininum cost path [Dijkstra] from {0} to {1}'.format(
-            flow.source.name, flow.target.name))
-
-        return self.dijsktra(flow.source, flow.target)
-
-    def dijsktra(self, source, target):
-        # shortest paths is a dict of nodes
-        # whose value is a tuple of (previous node, weight)
-        shortest_paths = {source.index: (None, 0)}
-        current_node = source.index
-        visited = set()
-
-
+    def createDistancesDict(self):
         # Cria dicionário de distâncias de cada nodo até todos os outros
         # distances = {
         #     'B': {'A': 5, 'D': 1, 'G': 2},
@@ -50,6 +33,45 @@ class Graph(object):
             distances[node1.index] = {}
             for node2 in self.nodes:
                 distances[node1.index][node2.index] = self.cost[node1.index][node2.index]
+
+        return distances
+
+    def updatePathCostMatrix(self, path, consumed_bandwidth):
+        # Atualiza as larguras de banda disponiveis de cada link
+        for i in range(len(path) - 1):
+            item_index_source = path[i]
+            item_index_target = path[i+1]
+            self.cost[item_index_source][item_index_target] = self.cost[item_index_source][item_index_target] - consumed_bandwidth
+
+        new_distances = self.createDistancesDict()
+
+        print(' - Updated cost')
+        print(np.matrix(self.cost))
+        print('\n\n')
+
+
+    def getMinimumCostPath(self, flow):
+        # Calcula caminho de custo mínimo, onde o custo de cada caminho é o recíproco
+        # da sua capacidade disponível (1/capacidade). Após associar um par de
+        # switches a um caminho, atualiza o custo de cada link.
+        print('-> Get mininum cost path [Dijkstra] from {0} to {1}\n'.format(
+            flow.source.name, flow.target.name))
+
+        min_cost_path = self.dijsktra(flow.source, flow.target)
+        print(' - Path found: {0}\n'.format(min_cost_path))
+
+        self.updatePathCostMatrix(min_cost_path, flow.bandwidth)
+
+        return min_cost_path
+
+    def dijsktra(self, source, target):
+        # shortest paths is a dict of nodes
+        # whose value is a tuple of (previous node, weight)
+        shortest_paths = {source.index: (None, 0)}
+        current_node = source.index
+        visited = set()
+
+        distances = self.createDistancesDict()
 
         while current_node != target.index:
             visited.add(current_node)
@@ -85,7 +107,7 @@ class Graph(object):
     def printCostMatrix(self):
         print('-> Cost matrix:')
         print(np.matrix(self.cost))
-        print('')
+        print('\n')
 
     def printGraph(self):
         for link in self.links:

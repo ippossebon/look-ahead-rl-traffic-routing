@@ -77,12 +77,11 @@ if __name__ == '__main__':
 
     # custo = 1 / capacidade_atual
     min_cost_path = network.getMinimumCostPath(flow25)
-    print(min_cost_path)
-    exit(1)
+    min_cost_path = network.getMinimumCostPath(flow13)
 
-    flows = []
-    flows.append(flow05)
-    flows.append(flow13)
-    flows.append(flow25)
-
-    paths = routingModel.findPaths(flows)
+    # flows = []
+    # flows.append(flow05)
+    # flows.append(flow13)
+    # flows.append(flow25)
+    #
+    # paths = routingModel.findPaths(flows)
