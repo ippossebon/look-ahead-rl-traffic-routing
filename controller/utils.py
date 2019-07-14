@@ -6,9 +6,6 @@ from collections import defaultdict
 # Cisco Reference bandwidth = 1 Gbps
 REFERENCE_BW = 10000000
 
-FIRST_PATH = True
-MIN_HOPS = False
-RANDOM = False
 
 class ControllerUtilities(object):
 
@@ -76,9 +73,6 @@ class ControllerUtilities(object):
 
         return paths_p[0]
 
-    def getFirstPath(self, paths):
-        return paths[0]
-
     def getMinimumHopsPath(self, paths):
         # retorna o primeiro caminho com o número mínimo de hops
         paths_cost = []
@@ -90,24 +84,12 @@ class ControllerUtilities(object):
 
         return paths[index_min]
 
-    def getRandomPath(self, paths):
-        index = randrange(len(paths))
-        return paths[index]
-
     def choosePathAccordingToHeuristic(self, src, dst):
         paths = self.getPaths(src, dst)
 
         # De acordo com a heuristica escolhida:
         final_path = []
-
-        if FIRST_PATH:
-            final_path = self.getFirstPath(paths)
-        elif MIN_HOPS:
-            final_path = self.getMinimumHopsPath(paths)
-        elif RANDOM:
-            final_path = self.getRandomPath(paths)
-        else:
-            print('Erro: heuristica nao escolhida. Retornou caminho vazio')
+        final_path = self.getMinimumHopsPath(paths)
 
         print('Caminho escolhido = {0}'.format(final_path))
         return final_path
