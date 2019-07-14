@@ -133,7 +133,11 @@ class HybridController(app_manager.RyuApp):
     def _packet_in_handler(self, ev):
 
         if not self.controller_utilities_initialized:
-            self.controller_utilities = ControllerUtilities(self.adjacency, self.datapath_list, self.bandwidths)
+            self.controller_utilities = ControllerUtilities(
+                self.adjacency,
+                self.datapath_list,
+                self.bandwidths
+            )
             self.controller_utilities_initialized = True
 
         msg = ev.msg
@@ -173,7 +177,8 @@ class HybridController(app_manager.RyuApp):
             if arp_pkt.opcode == arp.ARP_REPLY:
                 self.arp_table[src_ip] = src
 
-                # Hosts é um dicionário do tipo hosts[MAC_ADDRESS] = (switch_id, porta que conecta ao switch)
+                # Hosts é um dicionário do tipo
+                # hosts[MAC_ADDRESS] = (switch_id, porta que conecta ao switch)
                 h1 = self.hosts[src]
                 h2 = self.hosts[dst]
 
