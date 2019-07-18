@@ -1,14 +1,53 @@
 import numpy as np
 
 class Graph(object):
-    def __init__(self, links, nodes):
+    def __init__(self, links = [], nodes = []):
         self.cost = []
         self.links = links
         self.nodes = nodes
 
         self.createCostMatrix()
 
+    def addLink(self, link):
+        self.links.append(link)
+
+        # TODO: Atualiza matriz de custos
+
+    def contaisLink(self, node_id_1, node_id_2):
+        for link in self.links:
+            if (link.node1.id == node_id_1 and link.node2.id == node_id_2) or (link.node1.id == node_id_2 and link.node2.id == node_id_1):
+                return True
+
+        return False
+
+    def removeLink(self, node_id_1, node_id_2):
+        for link in self.links:
+            if (link.node1.id == node_id_1 and link.node2.id == node_id_2) or (link.node1.id == node_id_2 and link.node2.id == node_id_1):
+                link_index = self.links.index(link)
+                del self.links[link_index]
+
+                # TODO: Remover da matriz de adjacencia tb
+
+    def addNode(self, node):
+        self.nodes.append(node)
+
+    def removeNode(self, node_id):
+        for node in self.nodes:
+            if node.id == node_id:
+                node_index = self.nodes.index(node)
+                del self.nodes[node_index]
+
+                # TODO: Remover da matriz de adjacencia tb
+
+    def containsNodeId(self, node_id):
+        for node in self.nodes:
+            if node.id == node_id:
+                return True
+        return False
+
     def createCostMatrix(self):
+        if len(self.links) == 0 return
+
         # cost is NxN array of 'foo' (which can depend on i and j if you want)
         self.cost = [[float('inf') for i in range(len(self.nodes))] for j in range(len(self.nodes))]
 
@@ -55,7 +94,7 @@ class Graph(object):
         # da sua capacidade disponível (1/capacidade). Após associar um par de
         # switches a um caminho, atualiza o custo de cada link.
         print('-> Get mininum cost path [Dijkstra] from {0} to {1}\n'.format(
-            flow.source.name, flow.target.name))
+            flow.source.id, flow.target.id))
 
         min_cost_path = self.dijsktra(flow.source, flow.target)
         print(' - Path found: {0}\n'.format(min_cost_path))
@@ -111,7 +150,7 @@ class Graph(object):
     def printGraph(self):
         for link in self.links:
             print('{node1}-------({weight})-------{node2}'.format(
-                node1=link.node1.name,
+                node1=link.node1.id,
                 weight=link.weight,
-                node2=link.node2.name
+                node2=link.node2.id
             ))

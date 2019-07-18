@@ -16,6 +16,8 @@ from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
+from routing.graphModel import Graph, Link, Node, Flow
+
 from collections import defaultdict
 from operator import itemgetter
 
@@ -47,6 +49,11 @@ class ProjectController(app_manager.RyuApp):
         self.group_ids = []
         self.adjacency = defaultdict(dict)
         self.bandwidths = defaultdict(lambda: defaultdict(lambda: DEFAULT_BW))
+
+        self.networkGraph = Graph()
+        self.switches_count = 0
+        self.nodes = []
+        self.links = []
 
     def get_paths(self, src, dst):
         '''
@@ -317,6 +324,11 @@ class ProjectController(app_manager.RyuApp):
         switch = ev.switch.dp
         ofp_parser = switch.ofproto_parser
 
+        node = Node(id=switch.id, index=node_index)
+        self.switches_count = self.switches_count + 1
+        if not self.networkGraph.containsNodeId(switch.id):
+            self.networkGraph.addNode(node)
+
         if switch.id not in self.switches:
             self.switches.append(switch.id)
             self.datapath_list[switch.id] = switch
@@ -329,6 +341,10 @@ class ProjectController(app_manager.RyuApp):
     def switch_leave_handler(self, ev):
         print(ev)
         switch = ev.switch.dp.id
+
+        if self.networkGraph.containsNodeId(switch):
+            self.networkGraph.removeNode(switch)
+
         if switch in self.switches:
             self.switches.remove(switch)
             del self.datapath_list[switch]
@@ -341,13 +357,20 @@ class ProjectController(app_manager.RyuApp):
         self.adjacency[s1.dpid][s2.dpid] = s1.port_no
         self.adjacency[s2.dpid][s1.dpid] = s2.port_no
 
+        if not self.networkGraph.contaisLink(s1.dpid,s2.dpid):
+            self.networkGraph.addLink(s1.dpid,s2.dpid)
+
     @set_ev_cls(event.EventLinkDelete, MAIN_DISPATCHER)
     def link_delete_handler(self, ev):
         s1 = ev.link.src
         s2 = ev.link.dst
+
         # Exception handling if switch already deleted
         try:
             del self.adjacency[s1.dpid][s2.dpid]
             del self.adjacency[s2.dpid][s1.dpid]
+            
+            if self.networkGraph.contaisLink(s1.dpid,s2.dpid):
+                self.networkGraph.removeLink(s1.dpid,s2.dpid)
         except KeyError:
             pass

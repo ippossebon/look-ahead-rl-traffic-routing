@@ -36,17 +36,17 @@ if __name__ == '__main__':
     nodes = []
     links = []
 
-    node0 = Node(name='S0', index=0)
+    node0 = Node(id='S0', index=0)
     nodes.append(node0)
-    node1 = Node(name='S1', index=1)
+    node1 = Node(id='S1', index=1)
     nodes.append(node1)
-    node2 = Node(name='S2', index=2)
+    node2 = Node(id='S2', index=2)
     nodes.append(node2)
-    node3 = Node(name='S3', index=3)
+    node3 = Node(id='S3', index=3)
     nodes.append(node3)
-    node4 = Node(name='S4', index=4)
+    node4 = Node(id='S4', index=4)
     nodes.append(node4)
-    node5 = Node(name='S5', index=5)
+    node5 = Node(id='S5', index=5)
     nodes.append(node5)
 
     link01 = Link(node0, node1, 500)
