@@ -1,5 +1,7 @@
 import numpy as np
 
+INVALID_VALUE = -1
+
 class Graph(object):
     def __init__(self, links = [], nodes = []):
         self.cost = []
@@ -11,7 +13,10 @@ class Graph(object):
     def addLink(self, link):
         self.links.append(link)
 
-        # TODO: Atualiza matriz de custos
+        # TODO: Como saber a capacidade do link?
+        # TODO: como vamos indexar os elementos? por index ou por id?
+        self.cost[link.node1.index][link.node2.index] = 1 / link.weight
+        self.cost[link.node2.index][link.node1.index] = 1 / link.weight
 
     def contaisLink(self, node_id_1, node_id_2):
         for link in self.links:
@@ -26,7 +31,9 @@ class Graph(object):
                 link_index = self.links.index(link)
                 del self.links[link_index]
 
-                # TODO: Remover da matriz de adjacencia tb
+                # TODO: Remover da matriz de adjacencia  === Colocar valor inválido
+                self.cost[link.node1.index][link.node2.index] = INVALID_VALUE
+                self.cost[link.node2.index][link.node1.index] = INVALID_VALUE
 
     def addNode(self, node):
         self.nodes.append(node)
