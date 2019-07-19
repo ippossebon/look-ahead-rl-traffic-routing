@@ -53,7 +53,7 @@ class Graph(object):
         return False
 
     def createCostMatrix(self):
-        if len(self.links) == 0 return
+        if len(self.links) == 0: return
 
         # cost is NxN array of 'foo' (which can depend on i and j if you want)
         self.cost = [[float('inf') for i in range(len(self.nodes))] for j in range(len(self.nodes))]
