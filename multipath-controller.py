@@ -16,7 +16,10 @@ from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
-from routing.graphModel import Graph, Link, Node, Flow
+from routing.graphModel.graph import Graph
+from routing.graphModel.link import Link
+from routing.graphModel.node import Node
+from routing.graphModel.flow import Flow
 
 from collections import defaultdict
 from operator import itemgetter
@@ -369,7 +372,7 @@ class ProjectController(app_manager.RyuApp):
         try:
             del self.adjacency[s1.dpid][s2.dpid]
             del self.adjacency[s2.dpid][s1.dpid]
-            
+
             if self.networkGraph.contaisLink(s1.dpid,s2.dpid):
                 self.networkGraph.removeLink(s1.dpid,s2.dpid)
         except KeyError:
