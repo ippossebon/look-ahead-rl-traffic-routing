@@ -361,7 +361,8 @@ class ProjectController(app_manager.RyuApp):
         self.adjacency[s2.dpid][s1.dpid] = s2.port_no
 
         if not self.networkGraph.contaisLink(s1.dpid,s2.dpid):
-            self.networkGraph.addLink(s1.dpid,s2.dpid)
+            link_weight = self.bandwidths[s1.dpid][s2.dpid]
+            self.networkGraph.addLink(s1.dpid, s2.dpid, link_weight)
 
     @set_ev_cls(event.EventLinkDelete, MAIN_DISPATCHER)
     def link_delete_handler(self, ev):

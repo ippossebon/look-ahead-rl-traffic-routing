@@ -1,3 +1,6 @@
+from link import Link
+from node import Node 
+
 INVALID_VALUE = -1
 
 class Graph(object):
@@ -8,7 +11,10 @@ class Graph(object):
 
         self.createCostMatrix()
 
-    def addLink(self, link):
+    def addLink(self, node_id_1, node_id_2, weight):
+        node1 = Node(node_id_1)
+        node2 = Node(node_id_2)
+        link = Link(node1, node2, weight)
         self.links.append(link)
 
         # TODO: Como saber a capacidade do link?
