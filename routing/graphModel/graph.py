@@ -1,5 +1,3 @@
-import numpy as np
-
 INVALID_VALUE = -1
 
 class Graph(object):
@@ -92,7 +90,7 @@ class Graph(object):
         new_distances = self.createDistancesDict()
 
         print(' - Updated cost')
-        print(np.matrix(self.cost))
+        self.printCostMatrix()
         print('\n\n')
 
 
@@ -151,7 +149,8 @@ class Graph(object):
 
     def printCostMatrix(self):
         print('-> Cost matrix:')
-        print(np.matrix(self.cost))
+        for i in range(len(self.nodes)):
+            print(self.cost[i])
         print('\n')
 
     def printGraph(self):
