@@ -1,5 +1,5 @@
-from link import Link
-from node import Node
+from .link import Link
+from .node import Node
 
 INVALID_VALUE = -1
 
@@ -26,7 +26,6 @@ class Graph(object):
         for link in self.links:
             if (link.node1.id == node_id_1 and link.node2.id == node_id_2) or (link.node1.id == node_id_2 and link.node2.id == node_id_1):
                 return True
-
         return False
 
     def removeLink(self, node_id_1, node_id_2):
