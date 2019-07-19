@@ -2,7 +2,7 @@ INVALID_VALUE = -1
 
 class Graph(object):
     def __init__(self, links = [], nodes = []):
-        self.cost = []
+        self.cost = {}
         self.links = links
         self.nodes = nodes
 
@@ -13,8 +13,8 @@ class Graph(object):
 
         # TODO: Como saber a capacidade do link?
         # TODO: como vamos indexar os elementos? por index ou por id?
-        self.cost[link.node1.index][link.node2.index] = 1 / link.weight
-        self.cost[link.node2.index][link.node1.index] = 1 / link.weight
+        self.cost[link.node1.id][link.node2.id] = 1 / link.weight
+        self.cost[link.node2.id][link.node1.id] = 1 / link.weight
 
     def contaisLink(self, node_id_1, node_id_2):
         for link in self.links:
@@ -30,8 +30,8 @@ class Graph(object):
                 del self.links[link_index]
 
                 # TODO: Remover da matriz de adjacencia  === Colocar valor inválido
-                self.cost[link.node1.index][link.node2.index] = INVALID_VALUE
-                self.cost[link.node2.index][link.node1.index] = INVALID_VALUE
+                self.cost[link.node1.id][link.node2.id] = INVALID_VALUE
+                self.cost[link.node2.id][link.node1.id] = INVALID_VALUE
 
     def addNode(self, node):
         self.nodes.append(node)
@@ -58,8 +58,8 @@ class Graph(object):
 
         for link in self.links:
             # Inicializa custo bidirecional
-            self.cost[link.node1.index][link.node2.index] = 1 / link.weight
-            self.cost[link.node2.index][link.node1.index] = 1 / link.weight
+            self.cost[link.node1.id][link.node2.id] = 1 / link.weight
+            self.cost[link.node2.id][link.node1.id] = 1 / link.weight
 
     def createDistancesDict(self):
         # Cria dicionário de distâncias de cada nodo até todos os outros
@@ -74,9 +74,9 @@ class Graph(object):
         distances = {}
         for node1 in self.nodes:
             # Percorre a linha
-            distances[node1.index] = {}
+            distances[node1.id] = {}
             for node2 in self.nodes:
-                distances[node1.index][node2.index] = self.cost[node1.index][node2.index]
+                distances[node1.id][node2.id] = self.cost[node1.id][node2.id]
 
         return distances
 
@@ -110,13 +110,13 @@ class Graph(object):
 
     def dijsktra(self, source, target):
         # shortest paths is a dict of nodes whose value is a tuple of (previous node, weight)
-        shortest_paths = {source.index: (None, 0)}
-        current_node = source.index
+        shortest_paths = {source.id: (None, 0)}
+        current_node = source.id
         visited = set()
 
         distances = self.createDistancesDict()
 
-        while current_node != target.index:
+        while current_node != target.id:
             visited.add(current_node)
             destinations = distances[current_node]
             weight_to_current_node = shortest_paths[current_node][1]
