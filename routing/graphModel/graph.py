@@ -1,5 +1,5 @@
 from link import Link
-from node import Node 
+from node import Node
 
 INVALID_VALUE = -1
 
@@ -22,7 +22,7 @@ class Graph(object):
         self.cost[link.node1.id][link.node2.id] = 1 / link.weight
         self.cost[link.node2.id][link.node1.id] = 1 / link.weight
 
-    def contaisLink(self, node_id_1, node_id_2):
+    def containsLink(self, node_id_1, node_id_2):
         for link in self.links:
             if (link.node1.id == node_id_1 and link.node2.id == node_id_2) or (link.node1.id == node_id_2 and link.node2.id == node_id_1):
                 return True

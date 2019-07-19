@@ -360,7 +360,7 @@ class ProjectController(app_manager.RyuApp):
         self.adjacency[s1.dpid][s2.dpid] = s1.port_no
         self.adjacency[s2.dpid][s1.dpid] = s2.port_no
 
-        if not self.networkGraph.contaisLink(s1.dpid,s2.dpid):
+        if not self.networkGraph.containsLink(s1.dpid,s2.dpid):
             link_weight = self.bandwidths[s1.dpid][s2.dpid]
             self.networkGraph.addLink(s1.dpid, s2.dpid, link_weight)
 
@@ -374,7 +374,7 @@ class ProjectController(app_manager.RyuApp):
             del self.adjacency[s1.dpid][s2.dpid]
             del self.adjacency[s2.dpid][s1.dpid]
 
-            if self.networkGraph.contaisLink(s1.dpid,s2.dpid):
+            if self.networkGraph.containsLink(s1.dpid,s2.dpid):
                 self.networkGraph.removeLink(s1.dpid,s2.dpid)
         except KeyError:
             pass
