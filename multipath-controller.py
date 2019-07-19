@@ -271,6 +271,8 @@ class ProjectController(app_manager.RyuApp):
         eth = pkt.get_protocol(ethernet.ethernet)
         arp_pkt = pkt.get_protocol(arp.arp)
 
+        self.networkGraph.printGraph()
+
         # avoid broadcast from LLDP
         if eth.ethertype == 35020:
             return
@@ -361,8 +363,11 @@ class ProjectController(app_manager.RyuApp):
         self.adjacency[s2.dpid][s1.dpid] = s2.port_no
 
         if not self.networkGraph.containsLink(s1.dpid,s2.dpid):
-            link_weight = self.bandwidths[s1.dpid][s2.dpid]
-            self.networkGraph.addLink(s1.dpid, s2.dpid, link_weight)
+            # link_weight = self.bandwidths[s1.dpid][s2.dpid]
+            self.networkGraph.addLink(
+                node_id_1=s1.dpid,
+                node_id_2=s2.dpid,
+                weight=500)
 
     @set_ev_cls(event.EventLinkDelete, MAIN_DISPATCHER)
     def link_delete_handler(self, ev):
