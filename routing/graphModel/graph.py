@@ -17,8 +17,6 @@ class Graph(object):
         link = Link(node1, node2, weight)
         self.links.append(link)
 
-        print('link weight = {0}'.format(weight))
-
         # TODO: Como saber a capacidade do link?
         # TODO: como vamos indexar os elementos? por index ou por id?
         self.cost[link.node1.id][link.node2.id] = 1/link.weight

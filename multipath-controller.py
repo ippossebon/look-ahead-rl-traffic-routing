@@ -271,8 +271,6 @@ class ProjectController(app_manager.RyuApp):
         eth = pkt.get_protocol(ethernet.ethernet)
         arp_pkt = pkt.get_protocol(arp.arp)
 
-        self.networkGraph.printGraph()
-
         # avoid broadcast from LLDP
         if eth.ethertype == 35020:
             return
@@ -333,6 +331,8 @@ class ProjectController(app_manager.RyuApp):
         self.switches_count = self.switches_count + 1
         if not self.networkGraph.containsNodeId(switch.id):
             self.networkGraph.addNode(node)
+            self.networkGraph.printGraph()
+            self.networkGraph.printCostMatrix()
 
         if switch.id not in self.switches:
             self.switches.append(switch.id)
