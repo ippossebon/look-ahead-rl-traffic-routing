@@ -327,10 +327,9 @@ class ProjectController(app_manager.RyuApp):
         switch = ev.switch.dp
         ofp_parser = switch.ofproto_parser
 
-        node = Node(id=switch.id)
         self.switches_count = self.switches_count + 1
         if not self.networkGraph.containsNodeId(switch.id):
-            self.networkGraph.addNode(node)
+            self.networkGraph.addNode(switch.id)
             self.networkGraph.printGraph()
             # self.networkGraph.printCostMatrix()
 

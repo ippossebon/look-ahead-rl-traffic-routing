@@ -38,8 +38,10 @@ class Graph(object):
                 self.cost[link.node1.id][link.node2.id] = INVALID_VALUE
                 self.cost[link.node2.id][link.node1.id] = INVALID_VALUE
 
-    def addNode(self, node):
+    def addNode(self, node_id):
+        node = Node(node_id)
         self.nodes.append(node)
+        self.cost[node_id] = {}
 
     def removeNode(self, node_id):
         for node in self.nodes:
