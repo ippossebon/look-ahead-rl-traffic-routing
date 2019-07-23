@@ -30,12 +30,10 @@ dataset = dataset.drop('Timestamp', 1) # infos qualitativas
 dataset = dataset.drop('Label', 1) # infos qualitativas
 dataset = dataset.drop('L7Protocol', 1) # infos qualitativas
 dataset = dataset.drop('ProtocolName', 1) # infos qualitativas
-
+dataset = dataset.drop('Flow.Duration', 1) # infos qualitativas
 
 # drop rows that contain unknown values
 dataset = dataset.dropna()
-
-# nao faz sentido usar a duração do fluxo!!!
 
 # Split dataset into a training set and a test set
 train_dataset = dataset.sample(frac=0.8,random_state=0)

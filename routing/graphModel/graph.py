@@ -17,18 +17,17 @@ class Graph(object):
         link = Link(node1, node2, weight)
         self.links.append(link)
 
-        # TODO: Como saber a capacidade do link?
-        # TODO: como vamos indexar os elementos? por index ou por id?
-        print('node1.id = ', node1.id)
-        print('node2.id = ', node2.id)
-
-        print('link.node1.id = ', link.node1.id)
-        print('link.node2.id = ', link.node2.id)
-        print('link.weight = ', link.weight)
-
-        print('cost matrix = ', self.cost)
-        print('cost matrix[link.node1.id] = ', self.cost[link.node1.id])
-        print('cost matrix[link.node2.id] = ', self.cost[link.node2.id])
+        # TODO: Como saber a capacidade do link? Por enquanto, está fixa no código.
+        # print('node1.id = ', node1.id)
+        # print('node2.id = ', node2.id)
+        #
+        # print('link.node1.id = ', link.node1.id)
+        # print('link.node2.id = ', link.node2.id)
+        # print('link.weight = ', link.weight)
+        #
+        # print('cost matrix = ', self.cost)
+        # print('cost matrix[link.node1.id] = ', self.cost[link.node1.id])
+        # print('cost matrix[link.node2.id] = ', self.cost[link.node2.id])
 
         self.cost[link.node1.id][link.node2.id] = 1/link.weight
         self.cost[link.node2.id][link.node1.id] = 1/link.weight
@@ -167,8 +166,7 @@ class Graph(object):
 
     def printCostMatrix(self):
         print('-> Cost matrix:')
-        for i in range(len(self.nodes)):
-            print(self.cost[i])
+        print(self.cost)
         print('\n')
 
     def printGraph(self):
