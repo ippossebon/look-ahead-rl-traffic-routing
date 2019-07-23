@@ -332,7 +332,7 @@ class ProjectController(app_manager.RyuApp):
         if not self.networkGraph.containsNodeId(switch.id):
             self.networkGraph.addNode(node)
             self.networkGraph.printGraph()
-            self.networkGraph.printCostMatrix()
+            # self.networkGraph.printCostMatrix()
 
         if switch.id not in self.switches:
             self.switches.append(switch.id)
