@@ -19,6 +19,17 @@ class Graph(object):
 
         # TODO: Como saber a capacidade do link?
         # TODO: como vamos indexar os elementos? por index ou por id?
+        print('node1.id = ', node1.id)
+        print('node2.id = ', node2.id)
+
+        print('link.node1.id = ', link.node1.id)
+        print('link.node2.id = ', link.node2.id)
+        print('link.weight = ', link.weight)
+
+        print('cost matrix = ', self.cost)
+        print('cost matrix[link.node1.id] = ', self.cost[link.node1.id])
+        print('cost matrix[link.node2.id] = ', self.cost[link.node2.id])
+
         self.cost[link.node1.id][link.node2.id] = 1/link.weight
         self.cost[link.node2.id][link.node1.id] = 1/link.weight
 
