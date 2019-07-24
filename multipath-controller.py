@@ -182,8 +182,8 @@ class ProjectController(app_manager.RyuApp):
                         group_new = True
                         self.multipath_group_ids[node, src, dst] = self.generate_openflow_gid()
                         print('node = {0}; src = {1}; dst = {2}'.format(node, src, dst))
-                        print('multipath_group_ids = {0};\nmultipath_group_ids[node, src, dst] = {1}'.format(multipath_group_ids,multipath_group_ids[node, src, dst]))
-
+                        print('multipath_group_ids = {0};\nmultipath_group_ids[node, src, dst] = {1}'.format(self.multipath_group_ids,self.multipath_group_ids[node, src, dst]))
+                        exit(1)
                     group_id = self.multipath_group_ids[node, src, dst]
 
                     buckets = []
