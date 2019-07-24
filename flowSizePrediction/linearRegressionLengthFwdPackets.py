@@ -30,7 +30,8 @@ dataset = dataset.drop('Timestamp', 1) # infos qualitativas
 dataset = dataset.drop('Label', 1) # infos qualitativas
 dataset = dataset.drop('L7Protocol', 1) # infos qualitativas
 dataset = dataset.drop('ProtocolName', 1) # infos qualitativas
-dataset = dataset.drop('Flow.Duration', 1) # infos qualitativas
+
+dataset = dataset.drop('Flow.Duration', 1) # não vamos ter essa feature
 
 # drop rows that contain unknown values
 dataset = dataset.dropna()
