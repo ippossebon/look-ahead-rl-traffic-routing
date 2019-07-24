@@ -161,7 +161,6 @@ class ProjectController(app_manager.RyuApp):
                 i += 1
 
             for in_port in ports:
-
                 match_ip = ofp_parser.OFPMatch(
                     eth_type=0x0800,
                     ipv4_src=ip_src,
@@ -182,8 +181,10 @@ class ProjectController(app_manager.RyuApp):
 
                     if (node, src, dst) not in self.multipath_group_ids:
                         group_new = True
-                        self.multipath_group_ids[
-                            node, src, dst] = self.generate_openflow_gid()
+                        self.multipath_group_ids[node, src, dst] = self.generate_openflow_gid()
+                        print('node = {0}; src = {1}; dst = {2}'.format(node, src, dst))
+                        print('multipath_group_ids = {0};\nmultipath_group_ids[node, src, dst] = {1}'.format(multipath_group_ids,multipath_group_ids[node, src, dst]))
+
                     group_id = self.multipath_group_ids[node, src, dst]
 
                     buckets = []
@@ -229,6 +230,8 @@ class ProjectController(app_manager.RyuApp):
         # print "Adding flow ", match, actions
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
+
+        print('datapath = {0}; match={1}; buffer_id={2}'.format(datapath, match, buffer_id))
 
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
                                              actions)]
