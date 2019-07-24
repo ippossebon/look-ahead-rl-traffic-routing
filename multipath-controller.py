@@ -143,7 +143,6 @@ class ProjectController(app_manager.RyuApp):
         switches_in_paths = set().union(*paths)
 
         for node in switches_in_paths:
-
             dp = self.datapath_list[node]
             ofp = dp.ofproto
             ofp_parser = dp.ofproto_parser
@@ -228,10 +227,9 @@ class ProjectController(app_manager.RyuApp):
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         # print "Adding flow ", match, actions
+        # Datapath --> A class to describe an OpenFlow switch connected to this controller.
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-
-        print('datapath = {0}; match={1}; buffer_id={2}'.format(datapath, match, buffer_id))
 
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
                                              actions)]
