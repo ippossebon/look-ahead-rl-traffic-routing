@@ -135,9 +135,11 @@ class ProjectController(app_manager.RyuApp):
         computation_start = time.time()
         paths = self.get_optimal_paths(src, dst)
         pw = []
+
         for path in paths:
             pw.append(self.get_path_cost(path))
             print('Path = {0} ; cost = {1}'.format(path, pw[len(pw) - 1]))
+
         sum_of_pw = sum(pw) * 1.0
         paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
         switches_in_paths = set().union(*paths)
@@ -382,3 +384,50 @@ class ProjectController(app_manager.RyuApp):
                 self.networkGraph.removeLink(s1.dpid,s2.dpid)
         except KeyError:
             pass
+
+    def send_flow_stats_request(self, datapath):
+        ofp = datapath.ofproto
+        ofp_parser = datapath.ofproto_parser
+
+        cookie = cookie_mask = 0
+        match = ofp_parser.OFPMatch(in_port=1)
+        req = ofp_parser.OFPFlowStatsRequest(datapath, 0, ofp.OFPTT_ALL,
+            ofp.OFPP_ANY, ofp.OFPG_ANY, cookie, cookie_mask, match)
+        datapath.send_msg(req)
+
+    @set_ev_cls(ofp_event.EventOFPFlowStatsReply, MAIN_DISPATCHER)
+    def flow_stats_reply_handler(self, ev):
+        flows = []
+        for stat in ev.msg.body:
+            flows.append('table_id=%s '
+                         'duration_sec=%d duration_nsec=%d '
+                         'priority=%d '
+                         'idle_timeout=%d hard_timeout=%d flags=0x%04x '
+                         'cookie=%d packet_count=%d byte_count=%d '
+                         'match=%s instructions=%s' %
+                         (stat.table_id,
+                          stat.duration_sec, stat.duration_nsec,
+                          stat.priority,
+                          stat.idle_timeout, stat.hard_timeout, stat.flags,
+                          stat.cookie, stat.packet_count, stat.byte_count,
+                          stat.match, stat.instructions))
+        self.logger.debug('FlowStats: %s', flows)
+
+
+    def send_features_request(self, datapath):
+        ofp_parser = datapath.ofproto_parser
+
+        req = ofp_parser.OFPFeaturesRequest(datapath)
+        datapath.send_msg(req)
+
+
+    @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
+    def switch_features_handler(self, ev):
+        msg = ev.msg
+
+        self.logger.debug('OFPSwitchFeatures received: '
+                          'datapath_id=0x%016x n_buffers=%d '
+                          'n_tables=%d auxiliary_id=%d '
+                          'capabilities=0x%08x',
+                          msg.datapath_id, msg.n_buffers, msg.n_tables,
+                          msg.auxiliary_id, msg.capabilities)
