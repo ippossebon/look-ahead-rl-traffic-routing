@@ -16,6 +16,8 @@ from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
+from ryu.lib import hub
+
 from routing.graphModel.graph import Graph
 from routing.graphModel.link import Link
 from routing.graphModel.node import Node
@@ -57,6 +59,14 @@ class ProjectController(app_manager.RyuApp):
         self.switches_count = 0
         self.nodes = []
         self.links = []
+
+        self.monitorThread = hub.spawn(self._monitor)
+
+    def _monitor(self):
+        while True:
+            for dp in self.datapaths.values():
+                self._request_stats(dp)
+            hub.sleep(10)
 
     def get_paths(self, src, dst):
         '''
@@ -385,33 +395,52 @@ class ProjectController(app_manager.RyuApp):
         except KeyError:
             pass
 
-    def send_flow_stats_request(self, datapath):
-        ofp = datapath.ofproto
-        ofp_parser = datapath.ofproto_parser
+    def _request_stats(self, datapath):
+        self.logger.debug('send stats request: %016x', datapath.id)
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
 
-        cookie = cookie_mask = 0
-        match = ofp_parser.OFPMatch(in_port=1)
-        req = ofp_parser.OFPFlowStatsRequest(datapath, 0, ofp.OFPTT_ALL,
-            ofp.OFPP_ANY, ofp.OFPG_ANY, cookie, cookie_mask, match)
+        req = parser.OFPFlowStatsRequest(datapath)
+        datapath.send_msg(req)
+
+        req = parser.OFPPortStatsRequest(datapath, 0, ofproto.OFPP_ANY)
         datapath.send_msg(req)
 
     @set_ev_cls(ofp_event.EventOFPFlowStatsReply, MAIN_DISPATCHER)
-    def flow_stats_reply_handler(self, ev):
-        flows = []
-        for stat in ev.msg.body:
-            flows.append('table_id=%s '
-                         'duration_sec=%d duration_nsec=%d '
-                         'priority=%d '
-                         'idle_timeout=%d hard_timeout=%d flags=0x%04x '
-                         'cookie=%d packet_count=%d byte_count=%d '
-                         'match=%s instructions=%s' %
-                         (stat.table_id,
-                          stat.duration_sec, stat.duration_nsec,
-                          stat.priority,
-                          stat.idle_timeout, stat.hard_timeout, stat.flags,
-                          stat.cookie, stat.packet_count, stat.byte_count,
-                          stat.match, stat.instructions))
-        self.logger.debug('FlowStats: %s', flows)
+    def _flow_stats_reply_handler(self, ev):
+        body = ev.msg.body
+
+        self.logger.info('datapath         '
+                         'in-port  eth-dst           '
+                         'out-port packets  bytes')
+        self.logger.info('---------------- '
+                         '-------- ----------------- '
+                         '-------- -------- --------')
+        for stat in sorted([flow for flow in body if flow.priority == 1],
+                           key=lambda flow: (flow.match['in_port'],
+                                             flow.match['eth_dst'])):
+            self.logger.info('%016x %8x %17s %8x %8d %8d',
+                             ev.msg.datapath.id,
+                             stat.match['in_port'], stat.match['eth_dst'],
+                             stat.instructions[0].actions[0].port,
+                             stat.packet_count, stat.byte_count)
+
+
+    @set_ev_cls(ofp_event.EventOFPPortStatsReply, MAIN_DISPATCHER)
+    def _port_stats_reply_handler(self, ev):
+        body = ev.msg.body
+
+        self.logger.info('datapath         port     '
+                         'rx-pkts  rx-bytes rx-error '
+                         'tx-pkts  tx-bytes tx-error')
+        self.logger.info('---------------- -------- '
+                         '-------- -------- -------- '
+                         '-------- -------- --------')
+        for stat in sorted(body, key=attrgetter('port_no')):
+            self.logger.info('%016x %8x %8d %8d %8d %8d %8d %8d',
+                             ev.msg.datapath.id, stat.port_no,
+                             stat.rx_packets, stat.rx_bytes, stat.rx_errors,
+                             stat.tx_packets, stat.tx_bytes, stat.tx_errors)
 
 
     def send_features_request(self, datapath):
