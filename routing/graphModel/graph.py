@@ -127,13 +127,13 @@ class Graph(object):
 
     def dijsktra(self, source, target):
         # shortest paths is a dict of nodes whose value is a tuple of (previous node, weight)
-        shortest_paths = {source.id: (None, 0)}
-        current_node = source.id
+        shortest_paths = {source: (None, 0)}
+        current_node = source
         visited = set()
 
         distances = self.createDistancesDict()
 
-        while current_node != target.id:
+        while current_node != target:
             visited.add(current_node)
             destinations = distances[current_node]
             weight_to_current_node = shortest_paths[current_node][1]
