@@ -28,8 +28,8 @@ class Graph(object):
         # print('cost matrix[link.node1.id] = ', self.cost[link.node1.id])
         # print('cost matrix[link.node2.id] = ', self.cost[link.node2.id])
 
-        self.cost[link.node1.id][link.node2.id] = 1/link.weight
-        self.cost[link.node2.id][link.node1.id] = 1/link.weight
+        self.cost[link.node1][link.node2] = 1/link.weight
+        self.cost[link.node2][link.node1] = 1/link.weight
 
     def containsLink(self, node_id_1, node_id_2):
         for link in self.links:
