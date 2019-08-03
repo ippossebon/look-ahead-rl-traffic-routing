@@ -21,7 +21,7 @@ from operator import itemgetter
 
 from utils import ControllerUtilities
 
-from routing.graphModel.graph import Graph
+from routing.graphModel.graph2 import Graph
 from routing.graphModel.link import Link
 from routing.graphModel.node import Node
 from routing.graphModel.flow import Flow
