@@ -3,6 +3,7 @@ from .node import Node
 
 INVALID_VALUE = -1
 
+## Considera Node como string (id do switch)
 class Graph(object):
     def __init__(self, links = [], nodes = []):
         self.cost = {}
@@ -12,9 +13,7 @@ class Graph(object):
         self.createCostMatrix()
 
     def addLink(self, node_id_1, node_id_2, weight):
-        node1 = Node(node_id_1)
-        node2 = Node(node_id_2)
-        link = Link(node1, node2, weight)
+        link = Link(node_id_1, node_id_2, weight)
         self.links.append(link)
 
         # TODO: Como saber a capacidade do link? Por enquanto, está fixa no código.
@@ -34,19 +33,19 @@ class Graph(object):
 
     def containsLink(self, node_id_1, node_id_2):
         for link in self.links:
-            if (link.node1.id == node_id_1 and link.node2.id == node_id_2) or (link.node1.id == node_id_2 and link.node2.id == node_id_1):
+            if (link.node1 == node_id_1 and link.node2 == node_id_2) or (link.node1 == node_id_2 and link.node2 == node_id_1):
                 return True
         return False
 
     def removeLink(self, node_id_1, node_id_2):
         for link in self.links:
-            if (link.node1.id == node_id_1 and link.node2.id == node_id_2) or (link.node1.id == node_id_2 and link.node2.id == node_id_1):
+            if (link.node1 == node_id_1 and link.node2 == node_id_2) or (link.node1 == node_id_2 and link.node2 == node_id_1):
                 link_index = self.links.index(link)
                 del self.links[link_index]
 
                 # TODO: Remover da matriz de adjacencia  === Colocar valor inválido
-                self.cost[link.node1.id][link.node2.id] = INVALID_VALUE
-                self.cost[link.node2.id][link.node1.id] = INVALID_VALUE
+                self.cost[link.node1][link.node2] = INVALID_VALUE
+                self.cost[link.node2][link.node1] = INVALID_VALUE
 
     def addNode(self, node_id):
         node = Node(node_id)
@@ -63,7 +62,7 @@ class Graph(object):
 
     def containsNodeId(self, node_id):
         for node in self.nodes:
-            if node.id == node_id:
+            if node == node_id:
                 return True
         return False
 
@@ -75,8 +74,8 @@ class Graph(object):
 
         for link in self.links:
             # Inicializa custo bidirecional
-            self.cost[link.node1.id][link.node2.id] = 1 / link.weight
-            self.cost[link.node2.id][link.node1.id] = 1 / link.weight
+            self.cost[link.node1][link.node2] = 1 / link.weight
+            self.cost[link.node2][link.node1] = 1 / link.weight
 
     def createDistancesDict(self):
         # Cria dicionário de distâncias de cada nodo até todos os outros
@@ -91,9 +90,9 @@ class Graph(object):
         distances = {}
         for node1 in self.nodes:
             # Percorre a linha
-            distances[node1.id] = {}
+            distances[node1] = {}
             for node2 in self.nodes:
-                distances[node1.id][node2.id] = self.cost[node1.id][node2.id]
+                distances[node1][node2] = self.cost[node1][node2]
 
         return distances
 
@@ -111,17 +110,17 @@ class Graph(object):
         print('\n\n')
 
 
-    def getMinimumCostPath(self, source, target):
+    def getMinimumCostPath(self, flow):
         # Calcula caminho de custo mínimo, onde o custo de cada caminho é o recíproco
         # da sua capacidade disponível (1/capacidade). Após associar um par de
         # switches a um caminho, atualiza o custo de cada link.
         print('-> Get mininum cost path [Dijkstra] from {0} to {1}\n'.format(
-            source, target))
+            flow.source, flow.target))
 
-        min_cost_path = self.dijsktra(source, target)
+        min_cost_path = self.dijsktra(flow.source, flow.target)
         print(' - Path found: {0}\n'.format(min_cost_path))
 
-        # self.updatePathCostMatrix(min_cost_path, flow.bandwidth)
+        self.updatePathCostMatrix(min_cost_path, flow.bandwidth)
 
         return min_cost_path
 
@@ -129,9 +128,8 @@ class Graph(object):
         # shortest paths is a dict of nodes whose value is a tuple of (previous node, weight)
         shortest_paths = {source: (None, 0)}
         current_node = source
-        visited = set()
-
         distances = self.createDistancesDict()
+        visited = set()
 
         while current_node != target:
             visited.add(current_node)
@@ -172,7 +170,7 @@ class Graph(object):
     def printGraph(self):
         for link in self.links:
             print('{node1}-------({weight})-------{node2}'.format(
-                node1=link.node1.id,
+                node1=link.node1,
                 weight=link.weight,
-                node2=link.node2.id
+                node2=link.node2
             ))
