@@ -49,11 +49,33 @@ class HybridController(app_manager.RyuApp):
 
         self.controller_utilities_initialized = False
 
+        ## Bin packing variables
+        self.networkGraph = Graph()
+        self.switches_count = 0
+        self.nodes = []
+        self.links = []
+
+        self.datapaths = {}
+    #     self.monitorThread = hub.spawn(self._monitor)
+    #
+    #
+    # def _monitor(self):
+    #     while True:
+    #         for dp in self.datapaths.values():
+    #             self._request_stats(dp)
+    #         hub.sleep(10)
+
 
     @set_ev_cls(event.EventSwitchEnter)
     def switch_enter_handler(self, ev):
         switch = ev.switch.dp
         ofp_parser = switch.ofproto_parser
+        self.switches_count = self.switches_count + 1
+
+        if not self.networkGraph.containsNodeId(switch.id):
+            self.networkGraph.addNode(switch.id)
+            self.networkGraph.printGraph()
+            # self.networkGraph.printCostMatrix()
 
         if switch.id not in self.switches:
             self.switches.append(switch.id)
@@ -62,6 +84,7 @@ class HybridController(app_manager.RyuApp):
             # Pede informações de porta/link para o switch
             req = ofp_parser.OFPPortDescStatsRequest(switch)
             switch.send_msg(req)
+
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def _switch_features_handler(self, ev):
@@ -75,6 +98,7 @@ class HybridController(app_manager.RyuApp):
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 
+
     @set_ev_cls(event.EventSwitchLeave, MAIN_DISPATCHER)
     def switch_leave_handler(self, ev):
         # Remove switch
@@ -83,6 +107,11 @@ class HybridController(app_manager.RyuApp):
             self.switches.remove(switch)
             del self.datapath_list[switch]
             del self.adjacency[switch]
+
+        if self.networkGraph.containsNodeId(switch):
+            self.networkGraph.removeNode(switch)
+            self.switches_count = self.switches_count - 1
+
 
     @set_ev_cls(ofp_event.EventOFPPortDescStatsReply, MAIN_DISPATCHER)
     def port_desc_stats_reply_handler(self, ev):
@@ -99,6 +128,14 @@ class HybridController(app_manager.RyuApp):
         self.adjacency[s1.dpid][s2.dpid] = s1.port_no
         self.adjacency[s2.dpid][s1.dpid] = s2.port_no
 
+        if not self.networkGraph.containsLink(s1.dpid,s2.dpid):
+            # link_weight = self.bandwidths[s1.dpid][s2.dpid]
+            self.networkGraph.addLink(
+                node_id_1=s1.dpid,
+                node_id_2=s2.dpid,
+                weight=500) # # TODO: colocar largura de banda correta
+
+
     @set_ev_cls(event.EventLinkDelete, MAIN_DISPATCHER)
     def link_delete_handler(self, ev):
         s1 = ev.link.src
@@ -107,6 +144,9 @@ class HybridController(app_manager.RyuApp):
         try:
             del self.adjacency[s1.dpid][s2.dpid]
             del self.adjacency[s2.dpid][s1.dpid]
+
+            if self.networkGraph.containsLink(s1.dpid,s2.dpid):
+                self.networkGraph.removeLink(s1.dpid,s2.dpid)
         except KeyError:
             pass
 
@@ -262,7 +302,7 @@ class HybridController(app_manager.RyuApp):
         ip_dst = IP do host de destino
         '''
         computation_start = time.time()
-        path = self.controller_utilities.choosePathAccordingToHeuristic(src, dst)
+        path = self.networkGraph.getMinimumCostPath(src, dst)
 
         print('[installPaths] chosen path = {0}'.format(path))
 
