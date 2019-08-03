@@ -86,6 +86,7 @@ class Graph(object):
         #     'C': {'G': 2, 'E': 1, 'F': 16},
         #     'E': {'A': 12, 'D': 1, 'C': 1, 'F': 2},
         #     'F': {'A': 5, 'E': 2, 'C': 16}}
+        print('Matriz de custos = {0}'.format(self.cost))
         distances = {}
         for node1 in self.nodes:
             # Percorre a linha
