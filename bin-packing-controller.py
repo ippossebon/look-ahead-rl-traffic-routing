@@ -90,6 +90,8 @@ class HybridController(app_manager.RyuApp):
             req = ofp_parser.OFPPortDescStatsRequest(switch)
             switch.send_msg(req)
 
+        print('Switches do graphModel: {0}'.format(self.networkGraph.nodes))
+
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def _switch_features_handler(self, ev):
