@@ -309,7 +309,7 @@ class HybridController(app_manager.RyuApp):
         computation_start = time.time()
         neededBandwidth = 1000 # TODO: futuramente, aqui terá a predição da largura de banda necessária
         flow = Flow(src, dst, 200)
-        path = self.networkGraph.getMinimumCostPath(src, dst)
+        path = self.networkGraph.getMinimumCostPath(flow)
 
         print('[installPaths] chosen path = {0}'.format(path))
 
