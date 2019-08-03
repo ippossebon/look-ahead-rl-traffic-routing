@@ -111,17 +111,17 @@ class Graph(object):
         print('\n\n')
 
 
-    def getMinimumCostPath(self, flow):
+    def getMinimumCostPath(self, source, target):
         # Calcula caminho de custo mínimo, onde o custo de cada caminho é o recíproco
         # da sua capacidade disponível (1/capacidade). Após associar um par de
         # switches a um caminho, atualiza o custo de cada link.
         print('-> Get mininum cost path [Dijkstra] from {0} to {1}\n'.format(
-            flow.source.id, flow.target.id))
+            source, target))
 
-        min_cost_path = self.dijsktra(flow.source, flow.target)
+        min_cost_path = self.dijsktra(source, target)
         print(' - Path found: {0}\n'.format(min_cost_path))
 
-        self.updatePathCostMatrix(min_cost_path, flow.bandwidth)
+        # self.updatePathCostMatrix(min_cost_path, flow.bandwidth)
 
         return min_cost_path
 
