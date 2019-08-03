@@ -48,13 +48,12 @@ class Graph(object):
                 self.cost[link.node2][link.node1] = INVALID_VALUE
 
     def addNode(self, node_id):
-        node = Node(node_id)
-        self.nodes.append(node)
+        self.nodes.append(node_id)
         self.cost[node_id] = {}
 
     def removeNode(self, node_id):
         for node in self.nodes:
-            if node.id == node_id:
+            if node == node_id:
                 node_index = self.nodes.index(node)
                 del self.nodes[node_index]
 
