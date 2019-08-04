@@ -347,6 +347,9 @@ class HybridController(app_manager.RyuApp):
             )
 
             # path_with_ports = {1: (1, 3), 3: (1, 3), 4: (1, 3), 5: (2, 3), 6: (1, 2), 7: (1, 4), 10: (2, 1)}
+            print('[installPaths] path_with_ports = {0}'.format(path_with_ports))
+            print('[installPaths] path_with_ports[node] = {0}'.format(path_with_ports[node]))
+
             in_port = path_with_ports[node][0]
             out_port = path_with_ports[node][1]
             actions = [ofp_parser.OFPActionOutput(out_port)]
