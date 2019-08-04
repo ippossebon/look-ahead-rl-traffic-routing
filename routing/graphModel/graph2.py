@@ -89,9 +89,12 @@ class Graph(object):
         print('self.cost = {0}'.format(self.cost))
         distances = {}
         for node1 in self.nodes:
+            print('------ node1 = {0}'.format(node1))
             # Percorre a linha
             distances[node1] = {}
             for node2 in self.nodes:
+                print('node2 = {0}'.format(node2))
+
                 if node1 != node2:
                     distances[node1][node2] = self.cost[node1][node2]
 
