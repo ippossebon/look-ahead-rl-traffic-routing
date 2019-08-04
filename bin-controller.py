@@ -165,6 +165,10 @@ class ProjectController(app_manager.RyuApp):
         paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
         switches_in_paths = set().union(*paths)
 
+        print('paths_with_ports = {0}'.format(paths_with_ports))
+        print('switches_in_paths = {0}'.format(switches_in_paths))
+
+
         for node in switches_in_paths:
             dp = self.datapath_list[node]
             ofp = dp.ofproto
