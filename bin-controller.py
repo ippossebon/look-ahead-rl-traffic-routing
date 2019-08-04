@@ -204,6 +204,7 @@ class ProjectController(app_manager.RyuApp):
                     self.add_flow(dp, 1, match_arp, actions)
 
         print("Path installation finished in {0}".format(time.time() - computation_start))
+        print('paths_with_ports[0][src][1] {0}'.format(paths_with_ports[0][src][1]))
         return paths_with_ports[0][src][1]
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
