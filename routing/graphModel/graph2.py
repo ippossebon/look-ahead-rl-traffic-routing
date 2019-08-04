@@ -92,15 +92,10 @@ class Graph(object):
             # Percorre a linha
             distances[node1] = {}
             for node2 in self.nodes:
-                print('node1 = {0}'.format(node1))
-                print('node2 = {0}'.format(node2))
-                print('distances[{0}] = {1}'.format(node1, distances[node1]))
-                print('self.cost[{0}] = {1}'.format(node1, self.cost[node1]))
                 if node1 != node2:
                     distances[node1][node2] = self.cost[node1][node2]
-                else:
-                    print('sao iguais')
 
+        # Problema: como fazer quando nao há link direto entre os switches?
         return distances
 
     def updatePathCostMatrix(self, path, consumed_bandwidth):
