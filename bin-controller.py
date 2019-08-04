@@ -184,8 +184,7 @@ class ProjectController(app_manager.RyuApp):
                     in_port = path[node][0]
                     out_port = path[node][1]
 
-                    print('[installPaths] in_port = {0} ; out_port = {1}'.format(in_port, out_port))
-
+                    print('[installPaths] in_port = {0}, out_port = {1}'.format(in_port, out_port))
                     if (out_port, pw[i]) not in ports[in_port]:
                         ports[in_port].append((out_port, pw[i]))
                 i += 1
