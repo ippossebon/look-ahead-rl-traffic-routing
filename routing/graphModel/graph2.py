@@ -96,7 +96,7 @@ class Graph(object):
                 print('distances[{0}] = {1}'.format(node1, distances[node1]))
                 print('self.cost[{0}] = {1}'.format(node1, self.cost[node1]))
                 print('self.cost[node1][node2] = {0}'.format(self.cost[node1][node2]))
-                if not node1 == node2:
+                if node1 !== node2:
                     distances[node1][node2] = self.cost[node1][node2]
 
         return distances
