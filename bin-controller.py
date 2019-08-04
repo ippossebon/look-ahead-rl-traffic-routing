@@ -59,7 +59,7 @@ class ProjectController(app_manager.RyuApp):
         self.links = []
 
         self.datapaths = {}
-        # self.monitorThread = hub.spawn(self._monitor)
+        self.monitorThread = hub.spawn(self._monitor)
 
     def _monitor(self):
         while True:
