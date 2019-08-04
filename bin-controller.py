@@ -13,12 +13,12 @@ from ryu.lib.packet import ethernet
 from ryu.lib.packet import ipv4
 from ryu.lib.packet import ipv6
 from ryu.lib.packet import ether_types
-from ryu.lib import mac, ip
+from ryu.lib import mac, ip, hub
 from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
-from ryu.lib import hub
+from utils import ControllerUtilities
 
 from routing.graphModel.graph2 import Graph
 from routing.graphModel.link import Link
