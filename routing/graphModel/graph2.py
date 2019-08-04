@@ -86,19 +86,19 @@ class Graph(object):
         #     'C': {'G': 2, 'E': 1, 'F': 16},
         #     'E': {'A': 12, 'D': 1, 'C': 1, 'F': 2},
         #     'F': {'A': 5, 'E': 2, 'C': 16}}
-        print('self.cost = {0}'.format(self.cost))
-        distances = {}
-        for node1 in self.nodes:
-            print('------ node1 = {0}'.format(node1))
-            # Percorre a linha
-            distances[node1] = {}
-            for node2 in self.nodes:
-                print('node2 = {0}'.format(node2))
-
-                if node1 != node2:
-                    distances[node1][node2] = self.cost[node1][node2]
-
-        # Problema: como fazer quando nao há link direto entre os switches?
+        # print('self.cost = {0}'.format(self.cost))
+        distances = dict(self.cost)
+        # for node1 in self.nodes:
+        #     print('------ node1 = {0}'.format(node1))
+        #     # Percorre a linha
+        #     distances[node1] = {}
+        #     for node2 in self.nodes:
+        #         print('node2 = {0}'.format(node2))
+        #
+        #         if node1 != node2:
+        #             distances[node1][node2] = self.cost[node1][node2]
+        #
+        # # Problema: como fazer quando nao há link direto entre os switches?
         return distances
 
     def updatePathCostMatrix(self, path, consumed_bandwidth):
