@@ -92,7 +92,7 @@ class Graph(object):
             # Percorre a linha
             distances[node1] = {}
             for node2 in self.nodes:
-                print('node2 {0}'.format(node2))
+                print('node2 = {0}'.format(node2))
                 print('distances[{0}] = {1}'.format(node1, distances[node1]))
                 print('self.cost[{0}] = {1}'.format(node1, self.cost[node1]))
                 print('self.cost[node1][node2] = {0}'.format(self.cost[node1][node2]))
