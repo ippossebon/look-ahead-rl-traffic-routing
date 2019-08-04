@@ -152,12 +152,12 @@ class ProjectController(app_manager.RyuApp):
 
         neededBandwidth = 1000 # TODO: futuramente, aqui terá a predição da largura de banda necessária
         flow = Flow(src, dst, 200)
-        path = self.networkGraph.getMinimumCostPath(flow)
-
+        path = [self.networkGraph.getMinimumCostPath(flow)
+]
         print('[installPaths] chosen path = {0}'.format(path))
 
         paths_with_ports = self.add_ports_to_paths([path], first_port, last_port)
-        switches_in_paths = set().union(*paths)
+        switches_in_paths = set().union(*path)
 
         for node in switches_in_paths:
             dp = self.datapath_list[node]
@@ -192,15 +192,6 @@ class ProjectController(app_manager.RyuApp):
                 # print out_ports
 
                 if len(out_ports) > 1:
-                    group_id = None
-                    group_new = False
-
-                    if (node, src, dst) not in self.multipath_group_ids:
-                        group_new = True
-                        self.multipath_group_ids[node, src, dst] = self.generate_openflow_gid()
-                        print('multipath_group_ids = {0};\nmultipath_group_ids[node, src, dst] = {1}'.format(self.multipath_group_ids,self.multipath_group_ids[node, src, dst]))
-
-                    group_id = self.multipath_group_ids[node, src, dst]
                     actions = [ofp_parser.OFPActionOutput(out_ports[0][0])]
 
                     self.add_flow(dp, 32768, match_ip, actions)
