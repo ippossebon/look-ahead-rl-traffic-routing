@@ -155,6 +155,13 @@ class ProjectController(app_manager.RyuApp):
         paths = [self.networkGraph.getMinimumCostPath(flow)]
         print('[installPaths] chosen path = {0}'.format(paths[0]))
 
+        ###
+        # Gambiarra para poder user mesma estrutura do multipath
+        pw = []
+        path_cost = 10 # seta o custo de todos os caminhos como 10
+        pw.append(path_cost)
+        ###
+
         paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
         switches_in_paths = set().union(*paths)
 
