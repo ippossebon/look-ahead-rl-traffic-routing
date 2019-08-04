@@ -18,8 +18,6 @@ from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
-from utils import ControllerUtilities
-
 from routing.graphModel.graph2 import Graph
 from routing.graphModel.link import Link
 from routing.graphModel.node import Node
@@ -162,7 +160,7 @@ class ProjectController(app_manager.RyuApp):
         pw.append(path_cost)
         ###
 
-        path_with_ports = ControllerUtilities.addPortsToPath(paths, first_port, last_port)
+        path_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
 
         switches_in_paths = set().union(*paths)
 
