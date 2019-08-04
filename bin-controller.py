@@ -162,11 +162,12 @@ class ProjectController(app_manager.RyuApp):
         pw.append(path_cost)
         ###
 
-        paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
+        path_with_ports = self.controller_utilities.addPortsToPath(paths, first_port, last_port)
+
         switches_in_paths = set().union(*paths)
 
-        print('paths_with_ports = {0}'.format(paths_with_ports))
-        print('switches_in_paths = {0}'.format(switches_in_paths))
+        print('[installPaths] paths_with_ports = {0}'.format(paths_with_ports))
+        print(' [installPaths] switches_in_paths = {0}'.format(switches_in_paths))
 
 
         for node in switches_in_paths:
@@ -182,6 +183,9 @@ class ProjectController(app_manager.RyuApp):
                 if node in path:
                     in_port = path[node][0]
                     out_port = path[node][1]
+
+                    print('[installPaths] in_port = {0} ; out_port = {0}'.format(in_port, out_port))
+
                     if (out_port, pw[i]) not in ports[in_port]:
                         ports[in_port].append((out_port, pw[i]))
                 i += 1
