@@ -327,7 +327,7 @@ class HybridController(app_manager.RyuApp):
         # Lista de todos os switches que fazem parte do caminho ótimo
         switches_in_path = set().union(*list_path)
 
-        print('[getBestPath] switches_in_path = {0}'.format(switches_in_path))
+        print('[installPaths] switches_in_path = {0}'.format(switches_in_path))
 
         for node in switches_in_path:
             # Para cada switch que faz parte do caminho:
@@ -352,6 +352,7 @@ class HybridController(app_manager.RyuApp):
             actions = [ofp_parser.OFPActionOutput(out_port)]
 
 
+            print('[installPaths] dp = {0}'.format(dp))
             self.addFlow(dp, 32768, match_ip, actions)
             self.addFlow(dp, 1, match_arp, actions)
 
@@ -359,6 +360,9 @@ class HybridController(app_manager.RyuApp):
     def addFlow(self, datapath, priority, match, actions, buffer_id=None):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
+
+        print('[addFlow]: datapath = {0} ; priority = {1} ; match = {2} ; actions = {3} ; buffer_id = {4}'.format(
+            datapath, priority, match, actions, buffer_id))
 
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
                                              actions)]
