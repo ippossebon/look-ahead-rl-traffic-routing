@@ -356,6 +356,7 @@ class HybridController(app_manager.RyuApp):
 
 
             print('[installPaths] dp = {0}'.format(dp))
+            self.add_flow(datapath, in_port, dst, actions)
             self.addFlow(dp, 32768, match_ip, actions)
             self.addFlow(dp, 1, match_arp, actions)
 
