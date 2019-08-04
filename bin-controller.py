@@ -152,12 +152,11 @@ class ProjectController(app_manager.RyuApp):
 
         neededBandwidth = 1000 # TODO: futuramente, aqui terá a predição da largura de banda necessária
         flow = Flow(src, dst, 200)
-        path = [self.networkGraph.getMinimumCostPath(flow)
-]
-        print('[installPaths] chosen path = {0}'.format(path))
+        paths = [self.networkGraph.getMinimumCostPath(flow)]
+        print('[installPaths] chosen path = {0}'.format(paths[0]))
 
-        paths_with_ports = self.add_ports_to_paths([path], first_port, last_port)
-        switches_in_paths = set().union(*path)
+        paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
+        switches_in_paths = set().union(*paths)
 
         for node in switches_in_paths:
             dp = self.datapath_list[node]
