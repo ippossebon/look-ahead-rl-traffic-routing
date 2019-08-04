@@ -160,11 +160,11 @@ class ProjectController(app_manager.RyuApp):
         pw.append(path_cost)
         ###
 
-        path_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
+        paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
 
         switches_in_paths = set().union(*paths)
 
-        print('[installPaths] paths_with_ports = {0}'.format(path_with_ports))
+        print('[installPaths] paths_with_ports = {0}'.format(paths_with_ports))
         print(' [installPaths] switches_in_paths = {0}'.format(switches_in_paths))
 
 
