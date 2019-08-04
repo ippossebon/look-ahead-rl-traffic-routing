@@ -162,7 +162,7 @@ class ProjectController(app_manager.RyuApp):
         pw.append(path_cost)
         ###
 
-        path_with_ports = utils.addPortsToPath(paths, first_port, last_port)
+        path_with_ports = ControllerUtilities.addPortsToPath(paths, first_port, last_port)
 
         switches_in_paths = set().union(*paths)
 
