@@ -100,7 +100,9 @@ class MastersSwitchTopo(Topo):
 if __name__ == '__main__':
     setLogLevel('info')
     topo = MastersSwitchTopo()
-    c1 = RemoteController('c1', ip='127.0.0.1')
+    # c1 = RemoteController('c1', ip='127.0.0.1') #usando RYU
+    c1 = RemoteController('c1', ip='0.0.0.0', port='6653') #usando Floodlight
+
     net = Mininet(topo=topo, controller=c1)
     net.start()
     #net.pingAll()
